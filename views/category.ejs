@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active"><%= category.name %></li>
+                </ol>
+            </nav>
+            <h1 class="mb-4"><%= category.name %></h1>
+            <% if (category.description) { %>
+                <p class="lead"><%= category.description %></p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="row">
+        <% if (news && news.length > 0) { %>
+            <% news.forEach(item => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card news-card">
+                        <img src="<%= item.image || '/images/placeholder.jpg' %>" class="card-img-top" alt="<%= item.title %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/news/<%= item.slug %>"><%= item.title %></a></h5>
+                            <p class="card-text"><%= item.summary ? item.summary.substring(0, 100) + '...' : '' %></p>
+                            <div class="news-meta">
+                                <small class="text-muted">
+                                    <i class="fas fa-user"></i> <%= item.author_name %> |
+                                    <i class="fas fa-clock"></i> <%= new Date(item.created_at).toLocaleDateString() %>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4>No news found</h4>
+                    <p>There are no published news articles in this category yet.</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <% if (pagination && pagination.totalPages > 1) { %>
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="News pagination">
+                    <ul class="pagination justify-content-center">
+                        <% if (pagination.currentPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= pagination.currentPage - 1 %>">Previous</a>
+                            </li>
+                        <% } %>
+
+                        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+                            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+
+                        <% if (pagination.currentPage < pagination.totalPages) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= pagination.currentPage + 1 %>">Next</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

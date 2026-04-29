@@ -1,0 +1,224 @@
+<%- include('partials/header') %>
+
+<div class="container my-4">
+    <!-- Hero Slider -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div id="heroSlider" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <% if (featuredNews && featuredNews.length > 0) { %>
+                        <% featuredNews.forEach((news, index) => { %>
+                            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="<%= index %>" <%= index === 0 ? 'class="active"' : '' %>></button>
+                        <% }); %>
+                    <% } %>
+                </div>
+                <div class="carousel-inner">
+                    <% if (featuredNews && featuredNews.length > 0) { %>
+                        <% featuredNews.forEach((news, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="<%= news.image || '/images/placeholder.jpg' %>" class="d-block w-100" alt="<%= news.title %>">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h2><a href="/news/<%= news.slug %>" class="text-white"><%= news.title %></a></h2>
+                                    <p><%= news.summary ? news.summary.substring(0, 150) + '...' : '' %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="carousel-item active">
+                            <img src="/images/placeholder.jpg" class="d-block w-100" alt="Placeholder">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Welcome to News Portal</h2>
+                                <p>Your source for latest news and updates</p>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest News -->
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <h3 class="section-title">Latest News</h3>
+            <div class="row">
+                <% if (latestNews && latestNews.length > 0) { %>
+                    <% latestNews.forEach(news => { %>
+                        <div class="col-md-6 mb-4">
+                            <div class="card news-card">
+                                <img src="<%= news.image || '/images/placeholder.jpg' %>" class="card-img-top" alt="<%= news.title %>">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="/news/<%= news.slug %>"><%= news.title %></a></h5>
+                                    <p class="card-text"><%= news.summary ? news.summary.substring(0, 100) + '...' : '' %></p>
+                                    <div class="news-meta">
+                                        <small class="text-muted">
+                                            <i class="fas fa-user"></i> <%= news.author_name %> |
+                                            <i class="fas fa-clock"></i> <%= new Date(news.created_at).toLocaleDateString() %>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12">
+                        <p>No news available at the moment.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Popular News -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Popular News</h5>
+                </div>
+                <div class="card-body">
+                    <% if (popularNews && popularNews.length > 0) { %>
+                        <% popularNews.forEach((news, index) => { %>
+                            <div class="popular-news-item mb-3">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img src="<%= news.image || '/images/placeholder.jpg' %>" class="img-fluid" alt="<%= news.title %>">
+                                    </div>
+                                    <div class="col-9">
+                                        <h6><a href="/news/<%= news.slug %>"><%= news.title %></a></h6>
+                                        <small class="text-muted"><%= news.views || 0 %> views</small>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p>No popular news available.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <% if (categories && categories.length > 0) { %>
+                            <% categories.forEach(category => { %>
+                                <li class="list-group-item"><a href="/category/<%= category.slug %>"><%= category.name %></a></li>
+                            <% }); %>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Advertisement -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="/images/ad-placeholder.jpg" class="img-fluid" alt="Advertisement">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Sections -->
+    <% if (categories && categories.length > 0) { %>
+        <% categories.slice(0, 3).forEach(category => { %>
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h3 class="section-title"><a href="/category/<%= category.slug %>"><%= category.name %></a></h3>
+                    <div class="row">
+                        <% if (category.news && category.news.length > 0) { %>
+                            <% category.news.forEach(news => { %>
+                                <div class="col-md-4 mb-4">
+                                    <div class="card news-card">
+                                        <img src="<%= news.image || '/images/placeholder.jpg' %>" class="card-img-top" alt="<%= news.title %>">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><a href="/news/<%= news.slug %>"><%= news.title %></a></h5>
+                                            <p class="card-text"><%= news.summary ? news.summary.substring(0, 80) + '...' : '' %></p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock"></i> <%= new Date(news.created_at).toLocaleDateString() %>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="col-12">
+                                <p>No news in this category.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    <% } %>
+
+    <!-- Video News Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="section-title">Video News</h3>
+            <div class="row">
+                <% if (videos && videos.length > 0) { %>
+                    <% videos.forEach(video => { %>
+                        <div class="col-md-4 mb-4">
+                            <div class="card video-card">
+                                <div class="card-body">
+                                    <div class="video-wrapper">
+                                        <iframe src="<%= video.url %>" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                    <h5 class="card-title mt-2"><%= video.title %></h5>
+                                    <p class="card-text"><%= video.description ? video.description.substring(0, 100) + '...' : '' %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12">
+                        <p>No video news available.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Opinion Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="section-title">Opinion</h3>
+            <div class="row">
+                <% if (opinionNews && opinionNews.length > 0) { %>
+                    <% opinionNews.forEach(news => { %>
+                        <div class="col-md-6 mb-4">
+                            <div class="card opinion-card">
+                                <div class="card-body">
+                                    <div class="author-info mb-3">
+                                        <img src="<%= news.author_image || '/images/author-placeholder.jpg' %>" class="author-avatar" alt="<%= news.author_name %>">
+                                        <div>
+                                            <h6><%= news.author_name %></h6>
+                                            <small class="text-muted"><%= news.author_bio || 'Author' %></small>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title"><a href="/news/<%= news.slug %>"><%= news.title %></a></h5>
+                                    <p class="card-text"><%= news.summary ? news.summary.substring(0, 150) + '...' : '' %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12">
+                        <p>No opinion pieces available.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
